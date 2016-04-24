@@ -17,6 +17,7 @@
 # overlays
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
-# Keyhandler
+# Packages
 PRODUCT_PACKAGES += \
-    ConfigPanel
+    ConfigPanel \
+    OneplusDoze
