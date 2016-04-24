@@ -23,12 +23,22 @@ import java.util.Map;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.display.AmbientDisplayConfiguration;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.UserHandle;
+import android.provider.Settings;
+import android.text.TextUtils;
 
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
 import com.evervolv.internal.util.PackageManagerUtils;
+
+import org.lineageos.settings.device.DozeService;
+
+import static android.provider.Settings.Secure.DOZE_ALWAYS_ON;
+import static android.provider.Settings.Secure.DOZE_ENABLED;
 
 public class Constants {
 
@@ -53,6 +63,14 @@ public class Constants {
     // Pocket mode
     public static final String POCKETMODE_KEY = "pocketmode_service";
     public static final String ACTION_POCKETMODE_UPDATE = "org.lineageos.pocketmode.UPDATE";
+
+    // Doze preference keys
+    public static final String ALWAYS_ON_DISPLAY = "always_on_display";
+    public static final String CATEG_PICKUP_SENSOR = "pickup_sensor";
+    public static final String CATEG_PROX_SENSOR = "proximity_sensor";
+    public static final String GESTURE_PICK_UP_KEY = "gesture_pick_up";
+    public static final String GESTURE_HAND_WAVE_KEY = "gesture_hand_wave";
+    public static final String GESTURE_POCKET_KEY = "gesture_pocket";
 
     // Holds <preference_key> -> <proc_node> mapping
     public static final Map<String, String> sBooleanNodePreferenceMap = new HashMap<>();
@@ -101,5 +119,78 @@ public class Constants {
         final Intent intent = new Intent(ACTION_POCKETMODE_UPDATE);
         intent.putExtra("enable", value);
         context.sendBroadcastAsUser(intent, UserHandle.CURRENT);
+    }
+
+    public static void checkDozeService(Context context) {
+        final boolean dozeEnabled = isDozeEnabled(context);
+        final boolean sensorsEnabled = isPickUpEnabled(context) || isHandwaveEnabled(context)
+                || isPocketEnabled(context);
+        final boolean alwaysOnEnabled = isAlwaysOnEnabled(context);
+
+        if (dozeEnabled && sensorsEnabled && !alwaysOnEnabled) {
+            context.startServiceAsUser(new Intent(context, DozeService.class),
+                    UserHandle.CURRENT);
+        } else {
+            context.stopServiceAsUser(new Intent(context, DozeService.class),
+                    UserHandle.CURRENT);
+        }
+    }
+
+    public static boolean isDozeEnabled(Context context) {
+        return Settings.Secure.getInt(context.getContentResolver(),
+                DOZE_ENABLED, 1) != 0;
+    }
+
+    public static boolean enableDoze(Context context, boolean enable) {
+        return Settings.Secure.putInt(context.getContentResolver(),
+                DOZE_ENABLED, enable ? 1 : 0);
+    }
+
+    public static void launchDozePulse(Context context) {
+        context.sendBroadcastAsUser(new Intent("com.android.systemui.doze.pulse"),
+                new UserHandle(UserHandle.USER_CURRENT));
+    }
+
+    public static boolean enableAlwaysOn(Context context, boolean enable) {
+        return Settings.Secure.putIntForUser(context.getContentResolver(),
+                DOZE_ALWAYS_ON, enable ? 1 : 0, UserHandle.USER_CURRENT);
+    }
+
+    public static boolean isAlwaysOnEnabled(Context context) {
+        final boolean enabledByDefault = context.getResources()
+                .getBoolean(com.android.internal.R.bool.config_dozeAlwaysOnEnabled);
+        final boolean alwaysOnAvailable = new AmbientDisplayConfiguration(context)
+                .alwaysOnAvailable();
+
+        return Settings.Secure.getIntForUser(context.getContentResolver(),
+                DOZE_ALWAYS_ON, alwaysOnAvailable && enabledByDefault ? 1 : 0,
+                UserHandle.USER_CURRENT) != 0;
+    }
+
+    public static boolean isPickUpEnabled(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(GESTURE_PICK_UP_KEY, false);
+    }
+
+    public static boolean isHandwaveEnabled(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(GESTURE_HAND_WAVE_KEY, false);
+    }
+
+    public static boolean isPocketEnabled(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(GESTURE_POCKET_KEY, false);
+    }
+
+    public static Sensor getSensor(SensorManager sm, String type) {
+        if (TextUtils.isEmpty(type)) {
+            return null;
+        }
+        for (Sensor s : sm.getSensorList(Sensor.TYPE_ALL)) {
+            if (type.equals(s.getStringType())) {
+                return s;
+            }
+        }
+        return null;
     }
 }

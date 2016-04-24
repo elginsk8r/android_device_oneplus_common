@@ -17,15 +17,24 @@
 
 package org.lineageos.settings.device;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-public class ButtonSettingsActivity extends PreferenceActivity {
+public class ConfigPanelActivity extends PreferenceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final String action = getIntent().getAction();
+        final Fragment fragment;
+        if ("org.lineageos.settings.device.DOZE_SETTINGS".equals(action)) {
+            fragment = new DozeSettingsFragment();
+        } else {
+            fragment = new ButtonSettingsFragment();
+        }
+
         getFragmentManager().beginTransaction().replace(android.R.id.content,
-                new ButtonSettingsFragment()).commit();
+                fragment).commit();
     }
 }

@@ -88,6 +88,8 @@ public class Startup extends BroadcastReceiver {
                 updateOClickServiceState(context);
             }
         }
+
+        Constants.checkDozeService(context);
     }
 
     static boolean hasButtonProcs() {

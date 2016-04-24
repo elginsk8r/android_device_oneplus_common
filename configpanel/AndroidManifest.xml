@@ -21,12 +21,15 @@
           android:versionCode="7"
           android:versionName="2.4" >
 
+    <protected-broadcast android:name="com.android.systemui.doze.pulse" />
     <protected-broadcast android:name="org.lineageos.pocketmode.UPDATE" />
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.INJECT_EVENTS"/>
     <uses-permission android:name="evervolv.permission.HARDWARE_ABSTRACTION_ACCESS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
@@ -71,15 +74,43 @@
                 android:value="@string/summary_empty" />
         </activity>
 
+        <activity android:name=".ConfigPanelActivity"
+                  android:theme="@style/Theme.Main"
+                  android:label="@string/device_settings_app_name"
+                  android:process=":configpanel"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.settings.action.EXTRA_SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <!-- Additional button settings (Button settings) -->
-        <activity
+        <activity-alias
             android:name=".ButtonSettingsActivity"
-            android:label="@string/button_panel_title">
+            android:targetActivity=".ConfigPanelActivity"
+            android:label="@string/button_panel_title"
+            android:process=":configpanel"
+            android:exported="true">
             <intent-filter>
                 <action android:name="org.lineageos.settings.device.ADDITIONAL_BUTTONS_SETTINGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <!-- Doze settings -->
+        <service android:name=".DozeService" />
+        <activity-alias
+            android:name=".DozeSettingsActivity"
+            android:targetActivity=".ConfigPanelActivity"
+            android:label="@string/ambient_display_title"
+            android:process=":configpanel"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="org.lineageos.settings.device.DOZE_SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity-alias>
 
         <receiver android:name=".Startup" >
             <intent-filter>
