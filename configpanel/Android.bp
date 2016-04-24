@@ -6,6 +6,7 @@
 
 android_app {
     name: "ConfigPanel",
+    overrides: ["OneplusDoze OnePlusDoze"],
 
     srcs: ["src/**/*.java"],
     resource_dirs: ["res"],

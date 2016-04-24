@@ -28,6 +28,7 @@ import android.util.Log;
 
 import com.evervolv.internal.util.FileUtils;
 import org.lineageos.settings.device.utils.Constants;
+import org.lineageos.settings.device.utils.DozeUtils;
 
 public class Startup extends BroadcastReceiver {
 
@@ -61,6 +62,7 @@ public class Startup extends BroadcastReceiver {
                 }
             }
         }
+        DozeUtils.checkService(context);
     }
 
     static boolean hasButtonProcs() {
