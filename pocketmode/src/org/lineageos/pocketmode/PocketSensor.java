@@ -25,7 +25,7 @@ import android.hardware.SensorManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.lineageos.internal.util.FileUtils;
+import com.evervolv.internal.util.FileUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
