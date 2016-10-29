@@ -53,10 +53,10 @@ public class Constants {
     public static final String NOTIF_SLIDER_TOP_NODE = "/proc/tri-state-key/keyCode_top";
     public static final String NOTIF_SLIDER_MIDDLE_NODE = "/proc/tri-state-key/keyCode_middle";
     public static final String NOTIF_SLIDER_BOTTOM_NODE = "/proc/tri-state-key/keyCode_bottom";
+    public static final String FP_PROXIMITY_STATE_NODE = "/sys/devices/soc/soc:fpc_fpc1020/proximity_state";
 
     // Pocket mode
     public static final String POCKETMODE_KEY = "pocketmode_service";
-    public static final String ACTION_POCKETMODE_UPDATE = "org.lineageos.pocketmode.UPDATE";
 
     // Doze preference keys
     public static final String ALWAYS_ON_DISPLAY = "always_on_display";
@@ -100,16 +100,6 @@ public class Constants {
     public static String getPreferenceString(Context context, String key) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(key, (String) sNodeDefaultMap.get(key));
-    }
-
-    public static boolean hasPocketMode(Context context) {
-        return PackageManagerUtils.isAppInstalled(context, "org.lineageos.pocketmode");
-    }
-
-    public static void updatePocketMode(Context context, boolean value) {
-        final Intent intent = new Intent(ACTION_POCKETMODE_UPDATE);
-        intent.putExtra("enable", value);
-        context.sendBroadcastAsUser(intent, UserHandle.CURRENT);
     }
 
     public static void checkDozeService(Context context) {

@@ -22,7 +22,6 @@
           android:versionName="2.4" >
 
     <protected-broadcast android:name="com.android.systemui.doze.pulse" />
-    <protected-broadcast android:name="org.lineageos.pocketmode.UPDATE" />
 
     <uses-permission android:name="evervolv.permission.HARDWARE_ABSTRACTION_ACCESS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

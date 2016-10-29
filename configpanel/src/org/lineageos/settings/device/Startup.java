@@ -51,13 +51,6 @@ public class Startup extends BroadcastReceiver {
                     }
                 }
             }
-
-            // Enable PocketMode service if needed
-            if (Constants.hasPocketMode(context)) {
-                boolean enablePocketMode = PreferenceManager.getDefaultSharedPreferences(context)
-                        .getBoolean(Constants.POCKETMODE_KEY, false);
-                Constants.updatePocketMode(context, enablePocketMode);
-            }
         }
 
         Constants.checkDozeService(context);

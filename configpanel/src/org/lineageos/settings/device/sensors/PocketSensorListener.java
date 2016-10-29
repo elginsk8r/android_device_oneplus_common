@@ -22,13 +22,18 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
+import androidx.preference.PreferenceManager;
 
 import org.lineageos.settings.device.utils.Constants;
+
+import com.evervolv.internal.util.FileUtils;
 
 public class PocketSensorListener implements SensorEventListener {
 
     private static final boolean DEBUG = false;
     private static final String TAG = "PocketSensorListener";
+
+    private static final String FPC_FILE = Constants.FP_PROXIMITY_STATE_NODE;
 
     // Maximum time for the hand to cover the sensor: 1s
     private static final int HANDWAVE_MAX_DELTA_NS = 1000 * 1000 * 1000;
@@ -61,6 +66,15 @@ public class PocketSensorListener implements SensorEventListener {
         }
         mInPocketTime = event.timestamp;
         mSawNear = event.values[0] == 1;
+
+        boolean updateEnabled = PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getBoolean(Constants.POCKETMODE_KEY, false);
+        if (!updateEnabled)
+            return;
+
+        if (FileUtils.isFileWritable(FPC_FILE)) {
+            FileUtils.writeLine(FPC_FILE, mSawNear ? "1" : "0");
+        }
     }
 
     @Override
