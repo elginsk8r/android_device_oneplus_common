@@ -21,3 +21,7 @@ DEVICE_PACKAGE_OVERLAYS += \
 # Doze mode
 PRODUCT_PACKAGES += \
     OneplusDoze
+
+# Fingerprint sensor
+PRODUCT_PACKAGES += \
+    OneplusPocketMode
