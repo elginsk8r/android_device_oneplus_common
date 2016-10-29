@@ -24,6 +24,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import com.evervolv.internal.util.FileUtils;
 import org.lineageos.settings.device.utils.DozeUtils;
 
 import java.util.concurrent.ExecutorService;
@@ -70,7 +71,18 @@ public class PocketSensor implements SensorEventListener {
         } else {
             mInPocketTime = event.timestamp;
         }
+
         mSawNear = isNear;
+
+        if (!DozeUtils.isFingerprintPocketGestureEnabled(mContext)) {
+            return;
+        }
+
+        if (FileUtils.fileExists(DozeUtils.FP_PROXIMITY_STATE)) {
+            if (!FileUtils.writeLine(DozeUtils.FP_PROXIMITY_STATE, isNear ? "1" : "0")) {
+                Log.w(TAG, "Write to node " + DozeUtils.FP_PROXIMITY_STATE);
+            }
+        }
     }
 
     private boolean shouldPulse(long timestamp) {

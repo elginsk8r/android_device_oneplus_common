@@ -46,6 +46,9 @@ public final class DozeUtils {
     public static final String GESTURE_PICK_UP_KEY = "gesture_pick_up";
     public static final String GESTURE_HAND_WAVE_KEY = "gesture_hand_wave";
     public static final String GESTURE_POCKET_KEY = "gesture_pocket";
+    public static final String GESTURE_FP_POCKET_KEY = "gesture_fp_pocket";
+
+    public static final String FP_PROXIMITY_STATE = "/sys/devices/soc/soc:fpc_fpc1020/proximity_state";
 
     public static void startService(Context context) {
         if (DEBUG) Log.d(TAG, "Starting service");
@@ -116,6 +119,10 @@ public final class DozeUtils {
 
     public static boolean isPocketGestureEnabled(Context context) {
         return isGestureEnabled(context, GESTURE_POCKET_KEY);
+    }
+
+    public static boolean isFingerprintPocketGestureEnabled(Context context) {
+        return isGestureEnabled(context, GESTURE_FP_POCKET_KEY);
     }
 
     public static boolean sensorsEnabled(Context context) {
