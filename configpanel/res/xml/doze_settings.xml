@@ -55,6 +55,13 @@
             android:title="@string/pocket_gesture_title"
             android:summary="@string/pocket_gesture_summary" />
 
+        <SwitchPreference
+            android:key="gesture_fp_pocket"
+            android:defaultValue="false"
+            android:icon="@drawable/ic_fingerprint"
+            android:title="@string/fingerprint_pocketmode_title"
+            android:summary="@string/fingerprint_pocketmode_summary" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

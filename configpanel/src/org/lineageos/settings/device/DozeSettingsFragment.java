@@ -41,6 +41,7 @@ import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
+import com.evervolv.internal.util.FileUtils;
 import org.lineageos.settings.device.utils.DozeUtils;
 
 public class DozeSettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener,
@@ -54,6 +55,7 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
     private SwitchPreference mPickUpPreference;
     private SwitchPreference mHandwavePreference;
     private SwitchPreference mPocketPreference;
+    private SwitchPreference mFingerprintPreference;
 
     private Handler mHandler = new Handler();
 
@@ -87,11 +89,20 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
         mPocketPreference.setEnabled(dozeEnabled);
         mPocketPreference.setOnPreferenceChangeListener(this);
 
+        mFingerprintPreference = (SwitchPreference) findPreference(DozeUtils.GESTURE_FP_POCKET_KEY);
+        mFingerprintPreference.setEnabled(dozeEnabled);
+        mFingerprintPreference.setOnPreferenceChangeListener(this);
+
         // Hide AOD if not supported and set all its dependents otherwise
         if (!DozeUtils.alwaysOnDisplayAvailable(getActivity())) {
             getPreferenceScreen().removePreference(mAlwaysOnDisplayPreference);
         } else {
             mPickUpPreference.setDependency(DozeUtils.ALWAYS_ON_DISPLAY);
+        }
+
+        // Hide fingerprint preference if not supported
+        if (!FileUtils.fileExists(DozeUtils.FP_PROXIMITY_STATE)) {
+            getPreferenceScreen().removePreference(mFingerprintPreference);
         }
     }
 

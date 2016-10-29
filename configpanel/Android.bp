@@ -6,7 +6,7 @@
 
 android_app {
     name: "ConfigPanel",
-    overrides: ["OneplusDoze OnePlusDoze"],
+    overrides: ["OneplusDoze OnePlusDoze OneplusPocketMode"],
 
     srcs: ["src/**/*.java"],
     resource_dirs: ["res"],
