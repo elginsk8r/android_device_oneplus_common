@@ -76,6 +76,13 @@ public class Startup extends BroadcastReceiver {
             } else {
                 updateOClickServiceState(context);
             }
+
+            // Enable PocketMode service if needed
+            if (Constants.hasPocketMode(context)) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean enablePocketMode = prefs.getBoolean(Constants.POCKETMODE_KEY, false);
+                Constants.updatePocketMode(context, enablePocketMode);
+            }
         } else if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
             if (hasOClick()) {
                 updateOClickServiceState(context);

@@ -21,6 +21,8 @@
           android:versionCode="7"
           android:versionName="2.4" >
 
+    <protected-broadcast android:name="org.lineageos.pocketmode.UPDATE" />
+
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.INJECT_EVENTS"/>

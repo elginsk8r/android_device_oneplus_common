@@ -21,9 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.UserHandle;
 import android.support.v14.preference.SwitchPreference;
 import android.support.v7.preference.PreferenceManager;
+
+import com.evervolv.internal.util.PackageManagerUtils;
 
 public class Constants {
 
@@ -44,6 +48,10 @@ public class Constants {
     public static final String NOTIF_SLIDER_TOP_NODE = "/proc/tri-state-key/keyCode_top";
     public static final String NOTIF_SLIDER_MIDDLE_NODE = "/proc/tri-state-key/keyCode_middle";
     public static final String NOTIF_SLIDER_BOTTOM_NODE = "/proc/tri-state-key/keyCode_bottom";
+
+    // Pocket mode
+    public static final String POCKETMODE_KEY = "pocketmode_service";
+    public static final String ACTION_POCKETMODE_UPDATE = "org.lineageos.pocketmode.UPDATE";
 
     // Holds <preference_key> -> <proc_node> mapping
     public static final Map<String, String> sBooleanNodePreferenceMap = new HashMap<>();
@@ -82,5 +90,15 @@ public class Constants {
     public static String getPreferenceString(Context context, String key) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(key, (String) sNodeDefaultMap.get(key));
+    }
+
+    public static boolean hasPocketMode(Context context) {
+        return PackageManagerUtils.isAppInstalled(context, "org.lineageos.pocketmode");
+    }
+
+    public static void updatePocketMode(Context context, boolean value) {
+        final Intent intent = new Intent(ACTION_POCKETMODE_UPDATE);
+        intent.putExtra("enable", value);
+        context.sendBroadcastAsUser(intent, UserHandle.CURRENT);
     }
 }
