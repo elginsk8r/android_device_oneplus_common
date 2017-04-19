@@ -1,0 +1,2 @@
+# Do not change this file except to add new interfaces. Changing
+# pre-existing interfaces will fail VTS and break framework-only OTAs
