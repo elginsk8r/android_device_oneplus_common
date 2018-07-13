@@ -38,7 +38,8 @@ public class DozeService extends Service {
         mPickupSensor = new PickupSensor(this);
         mPocketSensor = new PocketSensor(this);
 
-        IntentFilter screenStateFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        IntentFilter screenStateFilter = new IntentFilter();
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mScreenStateReceiver, screenStateFilter);
     }
@@ -68,8 +69,8 @@ public class DozeService extends Service {
         if (Utils.isPickUpEnabled(this)) {
             mPickupSensor.disable();
         }
-        if (Utils.isHandwaveGestureEnabled(this) ||
-                Utils.isPocketGestureEnabled(this)) {
+        if (Utils.isHandwaveEnabled(this) ||
+                Utils.isPocketEnabled(this)) {
             mPocketSensor.disable();
         }
     }
@@ -79,8 +80,8 @@ public class DozeService extends Service {
         if (Utils.isPickUpEnabled(this)) {
             mPickupSensor.enable();
         }
-        if (Utils.isHandwaveGestureEnabled(this) ||
-                Utils.isPocketGestureEnabled(this)) {
+        if (Utils.isHandwaveEnabled(this) ||
+                Utils.isPocketEnabled(this)) {
             mPocketSensor.enable();
         }
     }
