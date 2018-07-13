@@ -50,7 +50,7 @@ public class PocketSensor implements SensorEventListener {
     public PocketSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = Utils.findSensorWithType(mSensorManager, "com.oneplus.sensor.pocket");
+        mSensor = Utils.getSensor(mSensorManager, "com.oneplus.sensor.pocket");
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
@@ -65,20 +65,19 @@ public class PocketSensor implements SensorEventListener {
             if (shouldPulse(event.timestamp)) {
                 Utils.launchDozePulse(mContext);
             }
-        } else {
-            mInPocketTime = event.timestamp;
         }
+        mInPocketTime = event.timestamp;
         mSawNear = isNear;
     }
 
     private boolean shouldPulse(long timestamp) {
         long delta = timestamp - mInPocketTime;
 
-        if (Utils.isHandwaveGestureEnabled(mContext) && Utils.isPocketGestureEnabled(mContext)) {
+        if (Utils.isHandwaveEnabled(mContext) && Utils.isPocketEnabled(mContext)) {
             return true;
-        } else if (Utils.isHandwaveGestureEnabled(mContext)) {
+        } else if (Utils.isHandwaveEnabled(mContext)) {
             return delta < HANDWAVE_MAX_DELTA_NS;
-        } else if (Utils.isPocketGestureEnabled(mContext)) {
+        } else if (Utils.isPocketEnabled(mContext)) {
             return delta >= POCKET_MIN_DELTA_NS;
         }
         return false;

@@ -41,6 +41,10 @@ public final class Utils {
     private static final String DOZE_INTENT = "com.android.systemui.doze.pulse";
 
     protected static final String ALWAYS_ON_DISPLAY = "always_on_display";
+
+    protected static final String CATEG_PICKUP_SENSOR = "pickup_sensor";
+    protected static final String CATEG_PROX_SENSOR = "proximity_sensor";
+
     protected static final String GESTURE_PICK_UP_KEY = "gesture_pick_up";
     protected static final String GESTURE_HAND_WAVE_KEY = "gesture_hand_wave";
     protected static final String GESTURE_POCKET_KEY = "gesture_pocket";
@@ -108,24 +112,24 @@ public final class Utils {
         return isGestureEnabled(context, GESTURE_PICK_UP_KEY);
     }
 
-    protected static boolean isHandwaveGestureEnabled(Context context) {
+    protected static boolean isHandwaveEnabled(Context context) {
         return isGestureEnabled(context, GESTURE_HAND_WAVE_KEY);
     }
 
-    protected static boolean isPocketGestureEnabled(Context context) {
+    protected static boolean isPocketEnabled(Context context) {
         return isGestureEnabled(context, GESTURE_POCKET_KEY);
     }
 
     protected static boolean sensorsEnabled(Context context) {
-        return isPickUpEnabled(context) || isHandwaveGestureEnabled(context)
-                || isPocketGestureEnabled(context);
+        return isPickUpEnabled(context) || isHandwaveEnabled(context)
+                || isPocketEnabled(context);
     }
 
-    protected static Sensor findSensorWithType(SensorManager sensorManager, String type) {
+    protected static Sensor getSensor(SensorManager sm, String type) {
         if (TextUtils.isEmpty(type)) {
             return null;
         }
-        List<Sensor> sensorList = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        List<Sensor> sensorList = sm.getSensorList(Sensor.TYPE_ALL);
         for (Sensor s : sensorList) {
             if (type.equals(s.getStringType())) {
                 return s;
