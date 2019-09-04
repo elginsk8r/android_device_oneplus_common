@@ -22,5 +22,5 @@ PRODUCT_PACKAGES += \
     ConfigPanel
 
 # Recovery
-PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES_ENG += \
     librecovery_updater_oppo
