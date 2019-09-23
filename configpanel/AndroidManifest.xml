@@ -24,14 +24,9 @@
     <protected-broadcast android:name="com.android.systemui.doze.pulse" />
     <protected-broadcast android:name="org.lineageos.pocketmode.UPDATE" />
 
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.INJECT_EVENTS"/>
     <uses-permission android:name="evervolv.permission.HARDWARE_ABSTRACTION_ACCESS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
     <uses-sdk
         android:minSdkVersion="24" />
@@ -54,25 +49,6 @@
                 <action android:name="android.content.action.SEARCH_INDEXABLES_PROVIDER" />
             </intent-filter>
         </provider>
-
-        <!-- O-Click settings (Connected devices category) -->
-        <service android:name=".OclickService" />
-        <activity
-            android:name=".BluetoothInputSettings"
-            android:icon="@drawable/ic_settings_oclick"
-            android:launchMode="singleTop"
-
-            android:label="@string/oclick_panel_title">
-            <intent-filter>
-                <action android:name="com.android.settings.action.EXTRA_SETTINGS" />
-            </intent-filter>
-            <meta-data
-                android:name="com.android.settings.category"
-                android:value="com.android.settings.category.ia.device" />
-            <meta-data
-                android:name="com.android.settings.summary"
-                android:value="@string/summary_empty" />
-        </activity>
 
         <activity android:name=".ConfigPanelActivity"
                   android:theme="@style/Theme.Main"
@@ -114,7 +90,6 @@
 
         <receiver android:name=".Startup" >
             <intent-filter>
-                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
                <action android:name="evervolv.intent.action.INITIALIZE_HARDWARE" />
             </intent-filter>
         </receiver>
