@@ -33,12 +33,6 @@ import com.evervolv.internal.util.PackageManagerUtils;
 public class Constants {
 
     // Preference keys
-    public static final String OCLICK_CONNECT_KEY = "oclick_connect";
-    public static final String OCLICK_DEVICE_ADDRESS_KEY = "oclick_device_address";
-    public static final String OCLICK_SNAPSHOT_KEY = "oclick_take_snapshot";
-    public static final String OCLICK_FIND_PHONE_KEY = "oclick_find_my_phone";
-    public static final String OCLICK_FENCE_KEY = "oclick_fence";
-    public static final String OCLICK_DISCONNECT_ALERT_KEY = "oclick_disconnect_alert";
     public static final String BUTTON_SWAP_KEY = "button_swap";
     public static final String NOTIF_SLIDER_TOP_KEY = "keycode_top_position";
     public static final String NOTIF_SLIDER_MIDDLE_KEY = "keycode_middle_position";
@@ -78,9 +72,6 @@ public class Constants {
         sNodeDefaultMap.put(NOTIF_SLIDER_TOP_KEY, "601");
         sNodeDefaultMap.put(NOTIF_SLIDER_MIDDLE_KEY, "602");
         sNodeDefaultMap.put(NOTIF_SLIDER_BOTTOM_KEY, "603");
-
-        sNodeDefaultMap.put(OCLICK_FENCE_KEY, true);
-        sNodeDefaultMap.put(OCLICK_DISCONNECT_ALERT_KEY, true);
     }
 
     public static boolean isPreferenceEnabled(Context context, String key) {
