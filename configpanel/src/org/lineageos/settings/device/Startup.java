@@ -17,20 +17,12 @@
 
 package org.lineageos.settings.device;
 
-import android.app.PendingIntent;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.UserHandle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -69,23 +61,11 @@ public class Startup extends BroadcastReceiver {
                 }
             }
 
-            // Disable O-Click settings if needed
-            if (!hasOClick()) {
-                disableComponent(context, BluetoothInputSettings.class.getName());
-                disableComponent(context, OclickService.class.getName());
-            } else {
-                updateOClickServiceState(context);
-            }
-
             // Enable PocketMode service if needed
             if (Constants.hasPocketMode(context)) {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                 boolean enablePocketMode = prefs.getBoolean(Constants.POCKETMODE_KEY, false);
                 Constants.updatePocketMode(context, enablePocketMode);
-            }
-        } else if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-            if (hasOClick()) {
-                updateOClickServiceState(context);
             }
         }
     }
@@ -95,10 +75,6 @@ public class Startup extends BroadcastReceiver {
                 FileUtils.fileExists(Constants.NOTIF_SLIDER_MIDDLE_NODE) &&
                 FileUtils.fileExists(Constants.NOTIF_SLIDER_BOTTOM_NODE)) ||
                 FileUtils.fileExists(Constants.BUTTON_SWAP_NODE);
-    }
-
-    static boolean hasOClick() {
-        return Build.MODEL.equals("N1") || Build.MODEL.equals("N3");
     }
 
     private void disableComponent(Context context, String component) {
@@ -117,23 +93,6 @@ public class Startup extends BroadcastReceiver {
             pm.setComponentEnabledSetting(name,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
-        }
-    }
-
-    private void updateOClickServiceState(Context context) {
-        BluetoothManager btManager = (BluetoothManager)
-                context.getSystemService(Context.BLUETOOTH_SERVICE);
-        BluetoothAdapter adapter = btManager.getAdapter();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean shouldStartService = adapter != null
-                && adapter.getState() == BluetoothAdapter.STATE_ON
-                && prefs.contains(Constants.OCLICK_DEVICE_ADDRESS_KEY);
-        Intent serviceIntent = new Intent(context, OclickService.class);
-
-        if (shouldStartService) {
-            context.startService(serviceIntent);
-        } else {
-            context.stopService(serviceIntent);
         }
     }
 }
