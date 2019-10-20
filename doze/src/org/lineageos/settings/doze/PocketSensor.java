@@ -50,7 +50,14 @@ public class PocketSensor implements SensorEventListener {
     public PocketSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = Utils.getSensor(mSensorManager, "com.oneplus.sensor.pocket");
+
+        String sensorName = mContext.getResources().getString(
+                R.bool.config_pocketSensorName);
+        if (!TextUtils.isEmpty(type))
+            mSensor = Utils.getSensor(mSensorManager, sensorName);
+        if (!mSensor)
+            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY, false);
+
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
