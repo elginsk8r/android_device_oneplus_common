@@ -20,7 +20,3 @@ DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 # Keyhandler
 PRODUCT_PACKAGES += \
     ConfigPanel
-
-# Recovery
-PRODUCT_PACKAGES_ENG += \
-    librecovery_updater_oppo
