@@ -14,16 +14,6 @@
 # limitations under the License.
 #
 
-# overlays
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
-
-PRODUCT_ENFORCE_RRO_TARGETS := *
-PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/overlay/vendor/ev/sdk
-
 # Keyhandler
 PRODUCT_PACKAGES += \
     ConfigPanel
-
-# Recovery
-PRODUCT_PACKAGES_ENG += \
-    librecovery_updater_oppo
