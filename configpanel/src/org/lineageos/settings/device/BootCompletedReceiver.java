@@ -36,15 +36,16 @@ import android.util.Log;
 
 import com.evervolv.internal.util.FileUtils;
 import org.lineageos.settings.device.utils.Constants;
+import org.lineageos.settings.device.utils.DozeUtils;
 
-public class Startup extends BroadcastReceiver {
+public class BootCompletedReceiver extends BroadcastReceiver {
 
-    private static final String TAG = Startup.class.getSimpleName();
+    private static final String TAG = BootCompletedReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
-        if (evervolv.content.Intent.ACTION_INITIALIZE_HARDWARE.equals(action)) {
+        if (action.equals(evervolv.content.Intent.ACTION_INITIALIZE_HARDWARE)) {
             // Disable button settings if needed
             if (!hasButtonProcs()) {
                 disableComponent(context, ButtonSettingsActivity.class.getName());
@@ -83,11 +84,12 @@ public class Startup extends BroadcastReceiver {
                 boolean enablePocketMode = prefs.getBoolean(Constants.POCKETMODE_KEY, false);
                 Constants.updatePocketMode(context, enablePocketMode);
             }
-        } else if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+        } else if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
             if (hasOClick()) {
                 updateOClickServiceState(context);
             }
         }
+        DozeUtils.checkDozeService(context);
     }
 
     static boolean hasButtonProcs() {

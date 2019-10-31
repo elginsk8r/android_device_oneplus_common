@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.doze;
+package org.lineageos.settings.device.sensors;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -24,6 +24,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.SystemClock;
 import android.util.Log;
+
+import org.lineageos.settings.device.utils.DozeUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,7 +48,7 @@ public class PickupSensor implements SensorEventListener {
     public PickupSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = Utils.getSensor(mSensorManager, "com.oneplus.sensor.pickup");
+        mSensor = DozeUtils.getSensor(mSensorManager, "com.oneplus.sensor.pickup");
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
@@ -65,7 +67,7 @@ public class PickupSensor implements SensorEventListener {
         mEntryTimestamp = SystemClock.elapsedRealtime();
 
         if (event.values[0] == 1) {
-            Utils.launchDozePulse(mContext);
+            DozeUtils.launchDozePulse(mContext);
         }
     }
 
@@ -74,7 +76,7 @@ public class PickupSensor implements SensorEventListener {
         /* Empty */
     }
 
-    protected void enable() {
+    public void enable() {
         if (DEBUG) Log.d(TAG, "Enabling");
         submit(() -> {
             mEntryTimestamp = SystemClock.elapsedRealtime();
@@ -83,7 +85,7 @@ public class PickupSensor implements SensorEventListener {
         });
     }
 
-    protected void disable() {
+    public void disable() {
         if (DEBUG) Log.d(TAG, "Disabling");
         submit(() -> {
             mSensorManager.unregisterListener(this, mSensor);

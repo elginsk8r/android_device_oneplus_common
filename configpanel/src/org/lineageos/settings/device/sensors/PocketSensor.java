@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.doze;
+package org.lineageos.settings.device.sensors;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -23,6 +23,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+
+import org.lineageos.settings.device.utils.DozeUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,7 +52,7 @@ public class PocketSensor implements SensorEventListener {
     public PocketSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = Utils.getSensor(mSensorManager, "com.oneplus.sensor.pocket");
+        mSensor = DozeUtils.getSensor(mSensorManager, "com.oneplus.sensor.pocket");
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
@@ -63,7 +65,7 @@ public class PocketSensor implements SensorEventListener {
         boolean isNear = event.values[0] == 1;
         if (mSawNear && !isNear) {
             if (shouldPulse(event.timestamp)) {
-                Utils.launchDozePulse(mContext);
+                DozeUtils.launchDozePulse(mContext);
             }
         }
         mInPocketTime = event.timestamp;
@@ -73,11 +75,11 @@ public class PocketSensor implements SensorEventListener {
     private boolean shouldPulse(long timestamp) {
         long delta = timestamp - mInPocketTime;
 
-        if (Utils.isHandwaveEnabled(mContext) && Utils.isPocketEnabled(mContext)) {
+        if (DozeUtils.isHandwaveEnabled(mContext) && DozeUtils.isPocketEnabled(mContext)) {
             return true;
-        } else if (Utils.isHandwaveEnabled(mContext)) {
+        } else if (DozeUtils.isHandwaveEnabled(mContext)) {
             return delta < HANDWAVE_MAX_DELTA_NS;
-        } else if (Utils.isPocketEnabled(mContext)) {
+        } else if (DozeUtils.isPocketEnabled(mContext)) {
             return delta >= POCKET_MIN_DELTA_NS;
         }
         return false;
@@ -88,7 +90,7 @@ public class PocketSensor implements SensorEventListener {
         /* Empty */
     }
 
-    protected void enable() {
+    public void enable() {
         if (DEBUG) Log.d(TAG, "Enabling");
         submit(() -> {
             mSensorManager.registerListener(this, mSensor,
@@ -96,7 +98,7 @@ public class PocketSensor implements SensorEventListener {
         });
     }
 
-    protected void disable() {
+    public void disable() {
         if (DEBUG) Log.d(TAG, "Disabling");
         submit(() -> {
             mSensorManager.unregisterListener(this, mSensor);

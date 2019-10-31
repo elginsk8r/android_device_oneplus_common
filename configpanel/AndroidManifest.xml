@@ -21,12 +21,15 @@
           android:versionCode="7"
           android:versionName="2.4" >
 
+    <protected-broadcast android:name="com.android.systemui.doze.pulse" />
     <protected-broadcast android:name="org.lineageos.pocketmode.UPDATE" />
 
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.INJECT_EVENTS"/>
     <uses-permission android:name="evervolv.permission.HARDWARE_ABSTRACTION_ACCESS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
@@ -81,10 +84,27 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".Startup" >
+        <!-- Additional doze settings (Doze settings) -->
+        <service android:name=".DozeService"
+                 android:permission="OneplusDozeService">
+        </service>
+
+        <activity
+            android:name=".DozeSettingsActivity"
+            android:label="@string/ambient_display_title"
+            android:theme="@style/Theme.Main">
+            <intent-filter>
+                <action android:name="org.lineageos.settings.device.DOZE_SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".BootCompletedReceiver">
             <intent-filter>
                 <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
-               <action android:name="evervolv.intent.action.INITIALIZE_HARDWARE" />
+                <action android:name="evervolv.intent.action.INITIALIZE_HARDWARE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 

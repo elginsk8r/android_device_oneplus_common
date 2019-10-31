@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.doze;
+package org.lineageos.settings.device.doze;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -24,6 +24,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
+
+import org.lineageos.settings.device.sensors.PickupSensor;
+import org.lineageos.settings.device.sensors.PocketSensor;
+import org.lineageos.settings.device.utils.DozeUtils;
 
 public class DozeService extends Service {
     private static final String TAG = "DozeService";
@@ -66,22 +70,22 @@ public class DozeService extends Service {
 
     private void onDisplayOn() {
         if (DEBUG) Log.d(TAG, "Display on");
-        if (Utils.isPickUpEnabled(this)) {
+        if (DozeUtils.isPickUpEnabled(this)) {
             mPickupSensor.disable();
         }
-        if (Utils.isHandwaveEnabled(this) ||
-                Utils.isPocketEnabled(this)) {
+        if (DozeUtils.isHandwaveEnabled(this) ||
+                DozeUtils.isPocketEnabled(this)) {
             mPocketSensor.disable();
         }
     }
 
     private void onDisplayOff() {
         if (DEBUG) Log.d(TAG, "Display off");
-        if (Utils.isPickUpEnabled(this)) {
+        if (DozeUtils.isPickUpEnabled(this)) {
             mPickupSensor.enable();
         }
-        if (Utils.isHandwaveEnabled(this) ||
-                Utils.isPocketEnabled(this)) {
+        if (DozeUtils.isHandwaveEnabled(this) ||
+                DozeUtils.isPocketEnabled(this)) {
             mPocketSensor.enable();
         }
     }
