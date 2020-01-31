@@ -40,7 +40,7 @@ public final class DozeUtils {
     private static final String DOZE_INTENT = "com.android.systemui.doze.pulse";
 
     public static final String ALWAYS_ON_DISPLAY = "always_on_display";
-    public static final String GESTURE_PICK_UP_KEY = "gesture_pick_up";
+    public static final String GESTURE_PICK_UP_KEY = "gesture_pick_up_type";
     public static final String GESTURE_HAND_WAVE_KEY = "gesture_hand_wave";
     public static final String GESTURE_POCKET_KEY = "gesture_pocket";
     public static final String GESTURE_FP_POCKET_KEY = "gesture_fp_pocket";
@@ -81,7 +81,13 @@ public final class DozeUtils {
     }
 
     public static boolean isPickUpEnabled(Context context) {
-        return isGestureEnabled(context, GESTURE_PICK_UP_KEY);
+        return !PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(GESTURE_PICK_UP_KEY, "0").equals("0");
+    }
+
+    public static boolean isPickUpSetToWake(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(GESTURE_PICK_UP_KEY, "0").equals("2");
     }
 
     public static boolean isHandwaveGestureEnabled(Context context) {
