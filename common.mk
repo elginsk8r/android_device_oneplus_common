@@ -23,3 +23,7 @@ PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/overlay/vendor/ev/sdk
 # Keyhandler
 PRODUCT_PACKAGES += \
     ConfigPanel
+
+# Soong namespaces
+PRODUCT_SOONG_NAMESPACES += \
+    $(LOCAL_PATH)
