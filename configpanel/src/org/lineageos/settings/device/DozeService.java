@@ -47,10 +47,10 @@ public class DozeService extends Service {
 
         mSensorManager = getSystemService(SensorManager.class);
 
-        mPickupSensor = Constants.getSensor(mSensorManager, "com.oneplus.sensor.pickup");
+        mPickupSensor = Constants.getSensor(mSensorManager, "oneplus.sensor.pickup");
         mPickupSensorListener = new PickupSensorListener(this);
 
-        mPocketSensor = Constants.getSensor(mSensorManager, "com.oneplus.sensor.pocket");
+        mPocketSensor = Constants.getSensor(mSensorManager, "oneplus.sensor.pocket");
         mPocketSensorListener = new PocketSensorListener(this);
 
         IntentFilter screenStateFilter = new IntentFilter();

@@ -190,6 +190,10 @@ public class Constants {
             if (type.equals(s.getStringType())) {
                 return s;
             }
+            String legacyType = "com." + type;
+            if (legacyType.equals(s.getStringType())) {
+                return s;
+            }
         }
         return null;
     }
