@@ -23,6 +23,7 @@
 
     <protected-broadcast android:name="org.lineageos.pocketmode.UPDATE" />
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="evervolv.permission.HARDWARE_ABSTRACTION_ACCESS" />
 
     <uses-sdk

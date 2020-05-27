@@ -33,6 +33,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
@@ -215,7 +216,8 @@ public class KeyHandler implements DeviceKeyHandler {
         boolean enabled = EVSettings.System.getInt(mContext.getContentResolver(),
                 EVSettings.System.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, 1) != 0;
         if (enabled) {
-            mVibrator.vibrate(50);
+            mVibrator.vibrate(VibrationEffect.createOneShot(50,
+                    VibrationEffect.DEFAULT_AMPLITUDE));
         }
     }
 }
