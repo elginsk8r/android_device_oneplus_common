@@ -46,7 +46,7 @@ public class PickupSensor implements SensorEventListener {
     public PickupSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = Utils.getSensor(mSensorManager, "com.oneplus.sensor.pickup");
+        mSensor = Utils.getSensor(mSensorManager, "oneplus.sensor.op_motion_detect");
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
@@ -62,6 +62,7 @@ public class PickupSensor implements SensorEventListener {
         if (delta < MIN_PULSE_INTERVAL_MS) {
             return;
         }
+
         mEntryTimestamp = SystemClock.elapsedRealtime();
 
         if (event.values[0] == 1) {
