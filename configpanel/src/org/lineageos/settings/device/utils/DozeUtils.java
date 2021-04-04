@@ -32,9 +32,6 @@ import org.lineageos.settings.device.DozeService;
 
 import java.util.List;
 
-import static android.provider.Settings.Secure.DOZE_ALWAYS_ON;
-import static android.provider.Settings.Secure.DOZE_ENABLED;
-
 public final class DozeUtils {
 
     private static final String TAG = "DozeUtils";
@@ -50,34 +47,18 @@ public final class DozeUtils {
 
     public static final String FP_PROXIMITY_STATE = "/sys/devices/soc/soc:fpc_fpc1020/proximity_state";
 
-    public static void startService(Context context) {
-        if (DEBUG) Log.d(TAG, "Starting service");
-        context.startServiceAsUser(new Intent(context, DozeService.class),
-                UserHandle.CURRENT);
-    }
-
-    public static void stopService(Context context) {
-        if (DEBUG) Log.d(TAG, "Stopping service");
-        context.stopServiceAsUser(new Intent(context, DozeService.class),
-                UserHandle.CURRENT);
-    }
-
     public static void checkService(Context context) {
         if (isDozeEnabled(context) && sensorsEnabled(context) && !isAlwaysOnEnabled(context)) {
-            startService(context);
+            context.startServiceAsUser(new Intent(context, DozeService.class),
+                    UserHandle.CURRENT);
         } else {
-            stopService(context);
+            context.stopServiceAsUser(new Intent(context, DozeService.class),
+                    UserHandle.CURRENT);
         }
     }
 
     public static boolean isDozeEnabled(Context context) {
-        return Settings.Secure.getInt(context.getContentResolver(),
-                DOZE_ENABLED, 1) != 0;
-    }
-
-    public static boolean enableDoze(Context context, boolean enable) {
-        return Settings.Secure.putInt(context.getContentResolver(),
-                DOZE_ENABLED, enable ? 1 : 0);
+        return new AmbientDisplayConfiguration(context).pulseOnNotificationEnabled(UserHandle.USER_CURRENT);
     }
 
     public static void launchDozePulse(Context context) {
@@ -86,18 +67,8 @@ public final class DozeUtils {
                 new UserHandle(UserHandle.USER_CURRENT));
     }
 
-    public static boolean enableAlwaysOn(Context context, boolean enable) {
-        return Settings.Secure.putIntForUser(context.getContentResolver(),
-                DOZE_ALWAYS_ON, enable ? 1 : 0, UserHandle.USER_CURRENT);
-    }
-
     public static boolean isAlwaysOnEnabled(Context context) {
-        final boolean enabledByDefault = context.getResources()
-                .getBoolean(com.android.internal.R.bool.config_dozeAlwaysOnEnabled);
-
-        return Settings.Secure.getIntForUser(context.getContentResolver(),
-                DOZE_ALWAYS_ON, alwaysOnDisplayAvailable(context) && enabledByDefault ? 1 : 0,
-                UserHandle.USER_CURRENT) != 0;
+        return new AmbientDisplayConfiguration(context).alwaysOnEnabled(UserHandle.USER_CURRENT);
     }
 
     public static boolean alwaysOnDisplayAvailable(Context context) {

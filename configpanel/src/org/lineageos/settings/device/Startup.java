@@ -36,57 +36,38 @@ public class Startup extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        final String action = intent.getAction();
-        if (evervolv.content.Intent.ACTION_INITIALIZE_HARDWARE.equals(action)) {
-            // Disable button settings if needed
-            if (!hasButtonProcs()) {
-                disableComponent(context, ButtonSettingsActivity.class.getName());
-            } else {
-                enableComponent(context, ButtonSettingsActivity.class.getName());
-
-                // Restore nodes to saved preference values
-                for (String pref : Constants.sButtonPrefKeys) {
-                    String node, value;
-                    if (Constants.sStringNodePreferenceMap.containsKey(pref)) {
-                        node = Constants.sStringNodePreferenceMap.get(pref);
-                        value = Constants.getPreferenceString(context, pref);
-                    } else {
-                        node = Constants.sBooleanNodePreferenceMap.get(pref);
-                        value = Constants.isPreferenceEnabled(context, pref) ?
-                                "1" : "0";
-                    }
-                    if (!FileUtils.writeLine(node, value)) {
-                        Log.w(TAG, "Write to node " + node +
-                            " failed while restoring saved preference values");
-                    }
+        // Disable button settings if needed
+        if (isSliderModeAvailable(context)) {
+            // Restore nodes to saved preference values
+            for (String pref : Constants.sButtonPrefKeys) {
+                String node, value;
+                if (Constants.sStringNodePreferenceMap.containsKey(pref)) {
+                    node = Constants.sStringNodePreferenceMap.get(pref);
+                    value = Constants.getPreferenceString(context, pref);
+                } else {
+                    node = Constants.sBooleanNodePreferenceMap.get(pref);
+                    value = Constants.isPreferenceEnabled(context, pref) ?
+                           "1" : "0";
+                }
+                if (!FileUtils.writeLine(node, value)) {
+                    Log.w(TAG, "Write to node " + node +
+                        " failed while restoring saved preference values");
                 }
             }
         }
         DozeUtils.checkService(context);
     }
 
-    static boolean hasButtonProcs() {
-        return (FileUtils.fileExists(Constants.NOTIF_SLIDER_TOP_NODE) &&
-                FileUtils.fileExists(Constants.NOTIF_SLIDER_MIDDLE_NODE) &&
-                FileUtils.fileExists(Constants.NOTIF_SLIDER_BOTTOM_NODE));
-    }
-
-    private void disableComponent(Context context, String component) {
-        ComponentName name = new ComponentName(context, component);
-        PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(name,
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                PackageManager.DONT_KILL_APP);
-    }
-
-    private void enableComponent(Context context, String component) {
-        ComponentName name = new ComponentName(context, component);
-        PackageManager pm = context.getPackageManager();
-        if (pm.getComponentEnabledSetting(name)
-                == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
-            pm.setComponentEnabledSetting(name,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+    private boolean isSliderModeAvailable(Context context) {
+        if (!FileUtils.fileExists(Constants.NOTIF_SLIDER_TOP_NODE) ||
+                !FileUtils.fileExists(Constants.NOTIF_SLIDER_MIDDLE_NODE) ||
+                !FileUtils.fileExists(Constants.NOTIF_SLIDER_BOTTOM_NODE)) {
+            context.getPackageManager().setComponentEnabledSetting(
+                    new ComponentName(context, ButtonSettingsActivity.class.getName()),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);
+            return false;
         }
+        return true;
     }
 }
