@@ -15,41 +15,29 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        android:key="gesture_pick_up"
+        android:defaultValue="0"
+        android:icon="@drawable/ic_pickup"
+        android:title="@string/pick_up_gesture_title"
+        android:summary="%s"
+        android:entries="@array/pick_up_gesture_entries"
+        android:entryValues="@array/pick_up_gesture_values" />
 
     <SwitchPreference
-        android:key="always_on_display"
-        android:disableDependentsState="true"
-        android:title="@string/ambient_display_always_on_title"
-        android:summary="@string/ambient_display_always_on_summary"
-        android:persistent="false" />
+        android:key="gesture_pocket"
+        android:defaultValue="false"
+        android:icon="@drawable/ic_pocket"
+        android:title="@string/pocket_gesture_title"
+        android:summary="@string/pocket_gesture_summary" />
 
-    <PreferenceCategory
-        android:key="pickup_sensor"
-        android:title="@string/pickup_sensor_title">
-
-        <ListPreference
-            android:key="gesture_pick_up_type"
-            android:defaultValue="0"
-            android:icon="@drawable/ic_pickup"
-            android:title="@string/pick_up_gesture_title"
-            android:summary="%s"
-            android:entries="@array/pick_up_gesture_entries"
-            android:entryValues="@array/pick_up_gesture_values" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:key="proximity_sensor"
-        android:title="@string/proximity_sensor_title">
-
-        <SwitchPreference
-            android:key="gesture_pocket"
-            android:defaultValue="false"
-            android:icon="@drawable/ic_pocket"
-            android:title="@string/pocket_gesture_title"
-            android:summary="@string/pocket_gesture_summary" />
-
-    </PreferenceCategory>
+    <com.android.settingslib.widget.FooterPreference
+        android:key="gesture_footer"
+        android:selectable="false"
+        android:title="@string/doze_settings_help_text"
+        settings:allowDividerAbove="true" />
 
 </PreferenceScreen>
