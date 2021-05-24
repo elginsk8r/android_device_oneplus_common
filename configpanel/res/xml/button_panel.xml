@@ -45,14 +45,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/fingerprint_title">
-
-        <SwitchPreference
-            android:key="pocketmode_service"
-            android:title="@string/fingerprint_pocketmode_title"
-            android:summary="@string/fingerprint_pocketmode_summary" />
-
-    </PreferenceCategory>
-
 </PreferenceScreen>
