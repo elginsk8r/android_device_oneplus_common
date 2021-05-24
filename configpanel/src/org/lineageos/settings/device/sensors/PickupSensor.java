@@ -48,7 +48,10 @@ public class PickupSensor implements SensorEventListener {
     public PickupSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = DozeUtils.findSensorWithType(mSensorManager, "com.oneplus.sensor.pickup");
+        mSensor = DozeUtils.findSensorWithType(mSensorManager, "oneplus.sensor.op_motion_detect");
+        if (mSensor == null) {
+            mSensor = DozeUtils.findSensorWithType(mSensorManager, "com.oneplus.sensor.pickup");
+        }
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
