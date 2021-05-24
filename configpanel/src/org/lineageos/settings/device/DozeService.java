@@ -34,13 +34,25 @@ public class DozeService extends Service {
     private static final boolean DEBUG = false;
 
     private PickupSensor mPickupSensor;
+    private boolean mHasPickup;
+
     private PocketSensor mPocketSensor;
+    private boolean mHasPocket;
 
     @Override
     public void onCreate() {
         if (DEBUG) Log.d(TAG, "Creating service");
-        mPickupSensor = new PickupSensor(this);
-        mPocketSensor = new PocketSensor(this);
+
+        int caps = DozeUtils.getAvailableSensors(this);
+        mHasPickup = caps != 0 || caps != 2;
+        if (mHasPickup) {
+            mPickupSensor = new PickupSensor(this);
+        }
+
+        mHasPocket = caps != 0 || caps != 1;
+        if (mHasPocket) {
+            mPocketSensor = new PocketSensor(this);
+        }
 
         IntentFilter screenStateFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -58,8 +70,12 @@ public class DozeService extends Service {
         if (DEBUG) Log.d(TAG, "Destroying service");
         super.onDestroy();
         this.unregisterReceiver(mScreenStateReceiver);
-        mPickupSensor.disable();
-        mPocketSensor.disable();
+        if (mPickupSensor != null) {
+            mPickupSensor.disable();
+        }
+        if (mPocketSensor != null) {
+            mPocketSensor.disable();
+        }
     }
 
     @Override
@@ -92,6 +108,9 @@ public class DozeService extends Service {
     private BroadcastReceiver mScreenStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!mHasPickup && !mHasPocket) {
+                return;
+            }
             if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 onDisplayOn();
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {

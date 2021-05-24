@@ -51,21 +51,28 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         boolean dozeEnabled = DozeUtils.isDozeEnabled(getActivity());
+        int availableSensors = DozeUtils.getAvailableSensors(getActivity());
 
         mPickUpPreference = (ListPreference) findPreference(DozeUtils.GESTURE_PICK_UP_KEY);
         mPickUpPreference.setEnabled(dozeEnabled);
         mPickUpPreference.setOnPreferenceChangeListener(this);
-        if (DozeUtils.alwaysOnDisplayAvailable(getActivity())) {
-            mPickUpPreference.setDependency(DozeUtils.ALWAYS_ON_DISPLAY);
+        if (availableSensors != 1 && availableSensors != 3) {
+            getPreferenceScreen().removePreference(mPickUpPreference);
         }
 
         mHandwavePreference = (SwitchPreference) findPreference(DozeUtils.GESTURE_HAND_WAVE_KEY);
         mHandwavePreference.setEnabled(dozeEnabled);
         mHandwavePreference.setOnPreferenceChangeListener(this);
+        if (availableSensors != 2 && availableSensors != 3) {
+            getPreferenceScreen().removePreference(mHandwavePreference);
+        }
 
         mPocketPreference = (SwitchPreference) findPreference(DozeUtils.GESTURE_POCKET_KEY);
         mPocketPreference.setEnabled(dozeEnabled);
         mPocketPreference.setOnPreferenceChangeListener(this);
+        if (availableSensors != 2 && availableSensors != 3) {
+            getPreferenceScreen().removePreference(mPocketPreference);
+        }
 
         mFingerprintPreference = (SwitchPreference) findPreference(DozeUtils.GESTURE_FP_POCKET_KEY);
         mFingerprintPreference.setEnabled(dozeEnabled);

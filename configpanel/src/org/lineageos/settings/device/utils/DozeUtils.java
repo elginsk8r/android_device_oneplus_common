@@ -57,6 +57,28 @@ public final class DozeUtils {
         }
     }
 
+    public static int getAvailableSensors(Context context) {
+        SensorManager manager = context.getSystemService(SensorManager.class);
+
+        // Check for pickup sensor
+        Sensor pickupSensor = findSensorWithType(manager, "oneplus.sensor.op_motion_detect");
+        if (pickupSensor == null) {
+            pickupSensor = findSensorWithType(manager, "oneplus.sensor.pickup");
+            if (pickupSensor == null) {
+                pickupSensor = findSensorWithType(manager, "com.oneplus.sensor.pickup");
+            }
+        }
+
+        // Check for pocket sensor
+        Sensor pocketSensor = findSensorWithType(manager, "oneplus.sensor.pocket");
+        if (pocketSensor == null) {
+            pocketSensor = findSensorWithType(manager, "com.oneplus.sensor.pocket");
+        }
+
+        // Return 0 for no sensors, 1 for pickup, 2 for pocket, 3 for both
+        return (pickupSensor != null ? 1 : 0) + (pocketSensor != null ? 2 : 0);
+    }
+
     public static boolean isDozeEnabled(Context context) {
         return new AmbientDisplayConfiguration(context).pulseOnNotificationEnabled(UserHandle.USER_CURRENT);
     }

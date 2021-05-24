@@ -53,7 +53,10 @@ public class PocketSensor implements SensorEventListener {
     public PocketSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = DozeUtils.findSensorWithType(mSensorManager, "com.oneplus.sensor.pocket");
+        mSensor = DozeUtils.findSensorWithType(mSensorManager, "oneplus.sensor.pocket");
+        if (mSensor == null) {
+            mSensor = DozeUtils.findSensorWithType(mSensorManager, "com.oneplus.sensor.pocket");
+        }
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
