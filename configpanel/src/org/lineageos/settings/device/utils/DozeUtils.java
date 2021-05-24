@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.hardware.display.AmbientDisplayConfiguration;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -30,7 +31,9 @@ import androidx.preference.PreferenceManager;
 
 import org.lineageos.settings.device.DozeService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class DozeUtils {
 
@@ -46,6 +49,24 @@ public final class DozeUtils {
     public static final String GESTURE_FP_POCKET_KEY = "gesture_fp_pocket";
 
     public static final String FP_PROXIMITY_STATE = "/sys/devices/soc/soc:fpc_fpc1020/proximity_state";
+    public static final String GOODIX_PROXIMITY_STATE = "/sys/devices/soc/soc:goodix_fp/proximity_state";
+
+    // Holds <platform> -> <sensor name> mapping
+    public static final Map<String, String> sPickupSensorMap = new HashMap<>();
+    public static final Map<String, String> sPocketSensorMap = new HashMap<>();
+    static {
+        sPickupSensorMap.put("msm8994", "com.oneplus.sensor.pickup");
+        sPickupSensorMap.put("msm8996", "com.oneplus.sensor.pickup");
+        sPickupSensorMap.put("msm8998", "tilt");
+        sPickupSensorMap.put("sdm845", "oneplus.sensor.pickup");
+        sPickupSensorMap.put("sm8150", "oneplus.sensor.op_motion_detect");
+
+        sPocketSensorMap.put("msm8994", "com.oneplus.sensor.pocket");
+        sPocketSensorMap.put("msm8996", "com.oneplus.sensor.pocket");
+        sPocketSensorMap.put("msm8998", "proximity");
+        sPocketSensorMap.put("sdm845", "oneplus.sensor.pocket");
+        sPocketSensorMap.put("sm8150", null);
+    }
 
     public static void checkService(Context context) {
         if (isDozeEnabled(context) && sensorsEnabled(context) && !isAlwaysOnEnabled(context)) {
@@ -80,6 +101,11 @@ public final class DozeUtils {
                 .getBoolean(gesture, false);
     }
 
+    public static boolean isPickupAvailable() {
+        String platform = SystemProperties.get("ro.board.platform", "");
+        return sPickupSensorMap.get(platform) != null;
+    }
+
     public static boolean isPickUpEnabled(Context context) {
         return !PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(GESTURE_PICK_UP_KEY, "0").equals("0");
@@ -88,6 +114,11 @@ public final class DozeUtils {
     public static boolean isPickUpSetToWake(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(GESTURE_PICK_UP_KEY, "0").equals("2");
+    }
+
+    public static boolean isPocketAvailable() {
+        String platform = SystemProperties.get("ro.board.platform", "");
+        return sPocketSensorMap.get(platform) != null;
     }
 
     public static boolean isHandwaveGestureEnabled(Context context) {

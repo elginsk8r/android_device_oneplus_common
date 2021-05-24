@@ -53,24 +53,37 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
         boolean dozeEnabled = DozeUtils.isDozeEnabled(getActivity());
 
         mPickUpPreference = (ListPreference) findPreference(DozeUtils.GESTURE_PICK_UP_KEY);
-        mPickUpPreference.setEnabled(dozeEnabled);
-        mPickUpPreference.setOnPreferenceChangeListener(this);
-        if (DozeUtils.alwaysOnDisplayAvailable(getActivity())) {
-            mPickUpPreference.setDependency(DozeUtils.ALWAYS_ON_DISPLAY);
+        if (!DozeUtils.isPickupAvailable()) {
+            getPreferenceScreen().removePreference(mPickUpPreference);
+        } else {
+            if (DozeUtils.alwaysOnDisplayAvailable(getActivity())) {
+                boolean alwaysOnEnabled = DozeUtils.isAlwaysOnEnabled(getActivity());
+                mPickUpPreference.setEnabled(dozeEnabled && !alwaysOnEnabled);
+            } else {
+                mPickUpPreference.setEnabled(dozeEnabled);
+            }
+            mPickUpPreference.setOnPreferenceChangeListener(this);
         }
 
         mHandwavePreference = (SwitchPreference) findPreference(DozeUtils.GESTURE_HAND_WAVE_KEY);
         mHandwavePreference.setEnabled(dozeEnabled);
         mHandwavePreference.setOnPreferenceChangeListener(this);
+        if (!DozeUtils.isPocketAvailable()) {
+            getPreferenceScreen().removePreference(mHandwavePreference);
+        }
 
         mPocketPreference = (SwitchPreference) findPreference(DozeUtils.GESTURE_POCKET_KEY);
         mPocketPreference.setEnabled(dozeEnabled);
         mPocketPreference.setOnPreferenceChangeListener(this);
+        if (!DozeUtils.isPocketAvailable()) {
+            getPreferenceScreen().removePreference(mPocketPreference);
+        }
 
         mFingerprintPreference = (SwitchPreference) findPreference(DozeUtils.GESTURE_FP_POCKET_KEY);
         mFingerprintPreference.setEnabled(dozeEnabled);
         mFingerprintPreference.setOnPreferenceChangeListener(this);
-        if (!FileUtils.fileExists(DozeUtils.FP_PROXIMITY_STATE)) {
+        if (!FileUtils.fileExists(DozeUtils.FP_PROXIMITY_STATE)
+                && !FileUtils.fileExists(DozeUtils.GOODIX_PROXIMITY_STATE)) {
             getPreferenceScreen().removePreference(mFingerprintPreference);
         }
     }
