@@ -60,13 +60,6 @@ public class Startup extends BroadcastReceiver {
                     }
                 }
             }
-
-            // Enable PocketMode service if needed
-            if (Constants.hasPocketMode(context)) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean enablePocketMode = prefs.getBoolean(Constants.POCKETMODE_KEY, false);
-                Constants.updatePocketMode(context, enablePocketMode);
-            }
         }
     }
 

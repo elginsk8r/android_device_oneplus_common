@@ -52,11 +52,6 @@ public class ButtonSettingsFragment extends PreferenceFragment
             FileUtils.writeLine(node, (String) newValue);
             return true;
         }
-        if (Constants.POCKETMODE_KEY.equals(preference.getKey())) {
-            Boolean value = (Boolean) newValue;
-            Constants.updatePocketMode(getContext(), (Boolean) newValue);
-            return true;
-        }
         return false;
     }
 
@@ -86,13 +81,6 @@ public class ButtonSettingsFragment extends PreferenceFragment
             } else {
                 removePref(l);
             }
-        }
-
-        SwitchPreference pocketMode = (SwitchPreference) findPreference(Constants.POCKETMODE_KEY);
-        if (!Constants.hasPocketMode(getContext())) {
-            removePref(pocketMode);
-        } else {
-            pocketMode.setOnPreferenceChangeListener(this);
         }
     }
 
