@@ -37,8 +37,10 @@ public class Startup extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
         if (evervolv.content.Intent.ACTION_INITIALIZE_HARDWARE.equals(action)) {
-            // Enable button settings if needed, disabled by default
-            if (hasButtonProcs()) {
+            // Disable button settings if needed
+            if (!hasButtonProcs()) {
+                disableComponent(context, ButtonSettingsActivity.class.getName());
+            } else {
                 enableComponent(context, ButtonSettingsActivity.class.getName());
 
                 // Restore nodes to saved preference values
