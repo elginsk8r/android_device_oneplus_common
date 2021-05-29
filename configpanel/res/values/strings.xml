@@ -45,6 +45,7 @@
 
     <!-- Notification slider -->
     <string name="notification_slider_category_title">Notification slider</string>
+    <string name="notification_slider_category_summary">Assign a ringer mode to each position of the notification slider</string>
     <string name="notification_slider_selection_dialog_title">Action</string>
     <string name="notification_slider_top_position">Top position</string>
     <string name="notification_slider_middle_position">Middle position</string>
@@ -53,4 +54,5 @@
     <string name="notification_slider_mode_priority_only">Priority only</string>
     <string name="notification_slider_mode_none">None</string>
     <string name="notification_slider_mode_vibration">Vibration</string>
+    <string name="notification_slider_help_text">Assign a ringer mode to each position of the notification slider. When the slider is shifted to that position the ringer mode will be updated.</string>
 </resources>
