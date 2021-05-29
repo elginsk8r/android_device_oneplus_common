@@ -22,6 +22,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.SystemProperties;
 import android.util.Log;
 
 import com.evervolv.internal.util.FileUtils;
@@ -42,6 +43,7 @@ public class PocketSensor implements SensorEventListener {
     // Minimum time until the device is considered to have been in the pocket: 2s
     private static final int POCKET_MIN_DELTA_NS = 2000 * 1000 * 1000;
 
+    private final String mProximityStatePath;
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private Context mContext;
@@ -53,10 +55,24 @@ public class PocketSensor implements SensorEventListener {
     public PocketSensor(Context context) {
         mContext = context;
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = DozeUtils.findSensorWithType(mSensorManager, "oneplus.sensor.pocket");
-        if (mSensor == null) {
-            mSensor = DozeUtils.findSensorWithType(mSensorManager, "com.oneplus.sensor.pocket");
+        mSensor = null;
+        if (DozeUtils.isPocketAvailable()) {
+            String platform = SystemProperties.get("ro.board.platform", "");
+            if (DozeUtils.sPocketSensorMap.get(platform).equals("proximity")) {
+                mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+            } else {
+                mSensor = DozeUtils.findSensorWithType(mSensorManager, DozeUtils.sPocketSensorMap.get(platform));
+            }
         }
+
+        if (FileUtils.fileExists(DozeUtils.FP_PROXIMITY_STATE)) {
+            mProximityStatePath = DozeUtils.FP_PROXIMITY_STATE;
+        } else if (FileUtils.fileExists(DozeUtils.GOODIX_PROXIMITY_STATE)) {
+            mProximityStatePath = DozeUtils.GOODIX_PROXIMITY_STATE;
+        } else {
+            mProximityStatePath = null;
+        }
+
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
@@ -81,9 +97,9 @@ public class PocketSensor implements SensorEventListener {
             return;
         }
 
-        if (FileUtils.fileExists(DozeUtils.FP_PROXIMITY_STATE)) {
-            if (!FileUtils.writeLine(DozeUtils.FP_PROXIMITY_STATE, isNear ? "1" : "0")) {
-                Log.w(TAG, "Write to node " + DozeUtils.FP_PROXIMITY_STATE);
+        if (FileUtils.isFileWritable(mProximityStatePath)) {
+            if (!FileUtils.writeLine(mProximityStatePath, isNear ? "1" : "0")) {
+                Log.w(TAG, "Write to node " + mProximityStatePath);
             }
         }
     }

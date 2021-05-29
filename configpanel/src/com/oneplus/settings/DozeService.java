@@ -34,23 +34,17 @@ public class DozeService extends Service {
     private static final boolean DEBUG = false;
 
     private PickupSensor mPickupSensor;
-    private boolean mHasPickup;
-
     private PocketSensor mPocketSensor;
-    private boolean mHasPocket;
 
     @Override
     public void onCreate() {
         if (DEBUG) Log.d(TAG, "Creating service");
 
-        int caps = DozeUtils.getAvailableSensors(this);
-        mHasPickup = caps != 0 || caps != 2;
-        if (mHasPickup) {
+        if (DozeUtils.isPickupAvailable()) {
             mPickupSensor = new PickupSensor(this);
         }
 
-        mHasPocket = caps != 0 || caps != 1;
-        if (mHasPocket) {
+        if (DozeUtils.isPocketAvailable()) {
             mPocketSensor = new PocketSensor(this);
         }
 
@@ -70,12 +64,8 @@ public class DozeService extends Service {
         if (DEBUG) Log.d(TAG, "Destroying service");
         super.onDestroy();
         this.unregisterReceiver(mScreenStateReceiver);
-        if (mPickupSensor != null) {
-            mPickupSensor.disable();
-        }
-        if (mPocketSensor != null) {
-            mPocketSensor.disable();
-        }
+        if (DozeUtils.isPickupAvailable()) mPickupSensor.disable();
+        if (DozeUtils.isPocketAvailable()) mPocketSensor.disable();
     }
 
     @Override
@@ -85,9 +75,16 @@ public class DozeService extends Service {
 
     private void onDisplayOn() {
         if (DEBUG) Log.d(TAG, "Display on");
-        if (DozeUtils.isPickUpEnabled(this)) {
+
+        if (DozeUtils.isPickupAvailable() &&
+                DozeUtils.isPickUpEnabled(this)) {
             mPickupSensor.disable();
         }
+
+        if (!DozeUtils.isPocketAvailable())  {
+            return;
+        }
+
         if (DozeUtils.isHandwaveGestureEnabled(this) ||
                 DozeUtils.isPocketGestureEnabled(this)) {
             mPocketSensor.disable();
@@ -96,9 +93,16 @@ public class DozeService extends Service {
 
     private void onDisplayOff() {
         if (DEBUG) Log.d(TAG, "Display off");
-        if (DozeUtils.isPickUpEnabled(this)) {
+
+        if (DozeUtils.isPickupAvailable() &&
+                DozeUtils.isPickUpEnabled(this)) {
             mPickupSensor.enable();
         }
+
+        if (!DozeUtils.isPocketAvailable())  {
+            return;
+        }
+
         if (DozeUtils.isHandwaveGestureEnabled(this) ||
                 DozeUtils.isPocketGestureEnabled(this)) {
             mPocketSensor.enable();
@@ -108,7 +112,8 @@ public class DozeService extends Service {
     private BroadcastReceiver mScreenStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!mHasPickup && !mHasPocket) {
+            if (!DozeUtils.isPocketAvailable() &&
+                    !DozeUtils.isPocketAvailable())  {
                 return;
             }
             if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {

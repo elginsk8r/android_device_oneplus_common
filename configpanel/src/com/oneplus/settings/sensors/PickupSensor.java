@@ -25,6 +25,7 @@ import android.hardware.SensorManager;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.util.Log;
 
 import com.oneplus.settings.utils.DozeUtils;
@@ -55,11 +56,13 @@ public class PickupSensor implements SensorEventListener {
         mContext = context;
         mPowerManager = mContext.getSystemService(PowerManager.class);
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = DozeUtils.findSensorWithType(mSensorManager, "oneplus.sensor.op_motion_detect");
-        if (mSensor == null) {
-            mSensor = DozeUtils.findSensorWithType(mSensorManager, "oneplus.sensor.pickup");
-            if (mSensor == null) {
-                mSensor = DozeUtils.findSensorWithType(mSensorManager, "com.oneplus.sensor.pickup");
+        mSensor = null;
+        if (DozeUtils.isPickupAvailable()) {
+            String platform = SystemProperties.get("ro.board.platform", "");
+            if (DozeUtils.sPickupSensorMap.get(platform).equals("tilt")) {
+                mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_TILT_DETECTOR);
+            } else {
+                mSensor = DozeUtils.findSensorWithType(mSensorManager, DozeUtils.sPickupSensorMap.get(platform));
             }
         }
         mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
