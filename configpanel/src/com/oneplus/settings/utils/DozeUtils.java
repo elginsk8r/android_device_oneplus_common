@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device.utils;
+package com.oneplus.settings.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +29,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.preference.PreferenceManager;
 
-import org.lineageos.settings.device.DozeService;
+import com.oneplus.settings.DozeService;
 
 import java.util.HashMap;
 import java.util.List;

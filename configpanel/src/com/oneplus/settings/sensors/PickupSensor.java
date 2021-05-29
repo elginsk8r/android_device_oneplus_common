@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device.sensors;
+package com.oneplus.settings.sensors;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -28,7 +28,7 @@ import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.util.Log;
 
-import org.lineageos.settings.device.utils.DozeUtils;
+import com.oneplus.settings.utils.DozeUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

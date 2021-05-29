@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device;
+package com.oneplus.settings;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -33,7 +33,7 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
 import com.evervolv.internal.util.FileUtils;
-import org.lineageos.settings.device.utils.DozeUtils;
+import com.oneplus.settings.utils.DozeUtils;
 
 public class DozeSettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener {
 

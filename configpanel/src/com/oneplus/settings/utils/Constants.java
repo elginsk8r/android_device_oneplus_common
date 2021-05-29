@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device.utils;
+package com.oneplus.settings.utils;
 
 import java.util.HashMap;
 import java.util.Map;
