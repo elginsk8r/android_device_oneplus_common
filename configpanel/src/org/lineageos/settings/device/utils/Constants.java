@@ -56,8 +56,8 @@ public class Constants {
         sStringNodePreferenceMap.put(NOTIF_SLIDER_MIDDLE_KEY, NOTIF_SLIDER_MIDDLE_NODE);
         sStringNodePreferenceMap.put(NOTIF_SLIDER_BOTTOM_KEY, NOTIF_SLIDER_BOTTOM_NODE);
 
-        sNodeDefaultMap.put(NOTIF_SLIDER_TOP_KEY, "601");
-        sNodeDefaultMap.put(NOTIF_SLIDER_MIDDLE_KEY, "602");
+        sNodeDefaultMap.put(NOTIF_SLIDER_TOP_KEY, "600");
+        sNodeDefaultMap.put(NOTIF_SLIDER_MIDDLE_KEY, "601");
         sNodeDefaultMap.put(NOTIF_SLIDER_BOTTOM_KEY, "603");
     }
 
