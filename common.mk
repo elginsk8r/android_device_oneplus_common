@@ -17,7 +17,3 @@
 # Keyhandler
 PRODUCT_PACKAGES += \
     ConfigPanel
-
-# Soong namespaces
-PRODUCT_SOONG_NAMESPACES += \
-    $(LOCAL_PATH)
