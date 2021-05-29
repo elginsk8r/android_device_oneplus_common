@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device;
+package com.oneplus.settings;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -25,9 +25,9 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 
-import org.lineageos.settings.device.sensors.PickupSensor;
-import org.lineageos.settings.device.sensors.PocketSensor;
-import org.lineageos.settings.device.utils.DozeUtils;
+import com.oneplus.settings.sensors.PickupSensor;
+import com.oneplus.settings.sensors.PocketSensor;
+import com.oneplus.settings.utils.DozeUtils;
 
 public class DozeService extends Service {
     private static final String TAG = "DozeService";

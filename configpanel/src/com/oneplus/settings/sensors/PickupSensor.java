@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015 The CyanogenMod Project
- *               2017-2019 The LineageOS Project
+ *               2017-2018 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,48 +15,54 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device.sensors;
+package com.oneplus.settings.sensors;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.util.Log;
 
-import com.evervolv.internal.util.FileUtils;
-import org.lineageos.settings.device.utils.DozeUtils;
+import com.oneplus.settings.utils.DozeUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class PocketSensor implements SensorEventListener {
+public class PickupSensor implements SensorEventListener {
 
     private static final boolean DEBUG = false;
-    private static final String TAG = "PocketSensor";
+    private static final String TAG = "PickupSensor";
 
-    // Maximum time for the hand to cover the sensor: 1s
-    private static final int HANDWAVE_MAX_DELTA_NS = 1000 * 1000 * 1000;
+    private static final int MIN_PULSE_INTERVAL_MS = 2500;
+    private static final int MIN_WAKEUP_INTERVAL_MS = 1000;
+    private static final int WAKELOCK_TIMEOUT_MS = 300;
 
-    // Minimum time until the device is considered to have been in the pocket: 2s
-    private static final int POCKET_MIN_DELTA_NS = 2000 * 1000 * 1000;
-
+    private PowerManager mPowerManager;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private WakeLock mWakeLock;
     private Context mContext;
     private ExecutorService mExecutorService;
 
-    private boolean mSawNear = false;
-    private long mInPocketTime = 0;
+    private long mEntryTimestamp;
 
-    public PocketSensor(Context context) {
+    public PickupSensor(Context context) {
         mContext = context;
+        mPowerManager = mContext.getSystemService(PowerManager.class);
         mSensorManager = mContext.getSystemService(SensorManager.class);
-        mSensor = DozeUtils.findSensorWithType(mSensorManager, "oneplus.sensor.pocket");
+        mSensor = DozeUtils.findSensorWithType(mSensorManager, "oneplus.sensor.op_motion_detect");
         if (mSensor == null) {
-            mSensor = DozeUtils.findSensorWithType(mSensorManager, "com.oneplus.sensor.pocket");
+            mSensor = DozeUtils.findSensorWithType(mSensorManager, "oneplus.sensor.pickup");
+            if (mSensor == null) {
+                mSensor = DozeUtils.findSensorWithType(mSensorManager, "com.oneplus.sensor.pickup");
+            }
         }
+        mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
         mExecutorService = Executors.newSingleThreadExecutor();
     }
 
@@ -66,39 +72,24 @@ public class PocketSensor implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        boolean isNear = event.values[0] == 1;
-        if (mSawNear && !isNear) {
-            if (shouldPulse(event.timestamp)) {
+        if (DEBUG) Log.d(TAG, "Got sensor event: " + event.values[0]);
+
+        long delta = SystemClock.elapsedRealtime() - mEntryTimestamp;
+        if (delta < MIN_PULSE_INTERVAL_MS) {
+            return;
+        } else {
+            mEntryTimestamp = SystemClock.elapsedRealtime();
+        }
+
+        if (event.values[0] == 1) {
+            if (DozeUtils.isPickUpSetToWake(mContext)) {
+                mWakeLock.acquire(WAKELOCK_TIMEOUT_MS);
+                mPowerManager.wakeUp(SystemClock.uptimeMillis(),
+                        PowerManager.WAKE_REASON_GESTURE, TAG);
+            } else {
                 DozeUtils.launchDozePulse(mContext);
             }
-        } else {
-            mInPocketTime = event.timestamp;
         }
-
-        mSawNear = isNear;
-
-        if (!DozeUtils.isFingerprintPocketGestureEnabled(mContext)) {
-            return;
-        }
-
-        if (FileUtils.fileExists(DozeUtils.FP_PROXIMITY_STATE)) {
-            if (!FileUtils.writeLine(DozeUtils.FP_PROXIMITY_STATE, isNear ? "1" : "0")) {
-                Log.w(TAG, "Write to node " + DozeUtils.FP_PROXIMITY_STATE);
-            }
-        }
-    }
-
-    private boolean shouldPulse(long timestamp) {
-        long delta = timestamp - mInPocketTime;
-
-        if (DozeUtils.isHandwaveGestureEnabled(mContext) && DozeUtils.isPocketGestureEnabled(mContext)) {
-            return true;
-        } else if (DozeUtils.isHandwaveGestureEnabled(mContext)) {
-            return delta < HANDWAVE_MAX_DELTA_NS;
-        } else if (DozeUtils.isPocketGestureEnabled(mContext)) {
-            return delta >= POCKET_MIN_DELTA_NS;
-        }
-        return false;
     }
 
     @Override
@@ -109,6 +100,7 @@ public class PocketSensor implements SensorEventListener {
     public void enable() {
         if (DEBUG) Log.d(TAG, "Enabling");
         submit(() -> {
+            mEntryTimestamp = SystemClock.elapsedRealtime();
             mSensorManager.registerListener(this, mSensor,
                     SensorManager.SENSOR_DELAY_NORMAL);
         });

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device;
+package com.oneplus.settings;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -27,8 +27,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.evervolv.internal.util.FileUtils;
-import org.lineageos.settings.device.utils.Constants;
-import org.lineageos.settings.device.utils.DozeUtils;
+import com.oneplus.settings.utils.Constants;
+import com.oneplus.settings.utils.DozeUtils;
 
 public class Startup extends BroadcastReceiver {
 

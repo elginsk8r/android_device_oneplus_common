@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device;
+package com.oneplus.settings;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,7 +28,7 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.SwitchPreference;
 
 import com.evervolv.internal.util.FileUtils;
-import org.lineageos.settings.device.utils.Constants;
+import com.oneplus.settings.utils.Constants;
 
 public class ButtonSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener {
