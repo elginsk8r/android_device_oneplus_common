@@ -1,6 +1,0 @@
-service fingerprint-inscreen-1-0 /system_ext/bin/hw/evervolv.biometrics.fingerprint.inscreen@1.0-service.oneplus
-    interface vendor.evervolv.biometrics.fingerprint.inscreen@1.0::IFingerprintInscreen default
-    class hal
-    user system
-    group system
-    shutdown critical
