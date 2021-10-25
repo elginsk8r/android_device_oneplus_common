@@ -35,25 +35,25 @@ oneplus_fod_hal_cc_defaults {
         "libhidlbase",
         "liblog",
         "libutils",
-        "vendor.lineage.biometrics.fingerprint.inscreen@1.0",
+        "vendor.evervolv.biometrics.fingerprint.inscreen@1.0",
         "vendor.oneplus.fingerprint.extension@1.0",
         "vendor.oneplus.hardware.display@1.0",
     ],
 }
 
 cc_binary {
-    name: "lineage.biometrics.fingerprint.inscreen@1.0-service.oneplus",
+    name: "evervolv.biometrics.fingerprint.inscreen@1.0-service.oneplus",
     defaults: ["oneplus_fod_hal_defaults"],
-    vintf_fragments: ["lineage.biometrics.fingerprint.inscreen@1.0-service.oneplus.xml"],
-    init_rc: ["lineage.biometrics.fingerprint.inscreen@1.0-service.oneplus.rc"],
+    vintf_fragments: ["evervolv.biometrics.fingerprint.inscreen@1.0-service.oneplus.xml"],
+    init_rc: ["evervolv.biometrics.fingerprint.inscreen@1.0-service.oneplus.rc"],
     system_ext_specific: true,
 }
 
 cc_binary {
-    name: "vendor.lineage.biometrics.fingerprint.inscreen@1.0-service.oneplus",
+    name: "vendor.evervolv.biometrics.fingerprint.inscreen@1.0-service.oneplus",
     defaults: ["oneplus_fod_hal_defaults"],
-    vintf_fragments: ["vendor.lineage.biometrics.fingerprint.inscreen@1.0-service.oneplus.xml"],
-    init_rc: ["vendor.lineage.biometrics.fingerprint.inscreen@1.0-service.oneplus.rc"],
+    vintf_fragments: ["vendor.evervolv.biometrics.fingerprint.inscreen@1.0-service.oneplus.xml"],
+    init_rc: ["vendor.evervolv.biometrics.fingerprint.inscreen@1.0-service.oneplus.rc"],
     vendor: true,
 }
 
