@@ -1,2 +1,7 @@
 # Do not change this file except to add new interfaces. Changing
 # pre-existing interfaces will fail VTS and break framework-only OTAs
+7fae4e89a11ea158181c8c04cdea08cf77f093641453300188df9cf3042c9e0e vendor.oneplus.camera.CameraHIDL@1.0::IOnePlusCameraProvider
+36287542940e68f9dd92d9fd1abb0a21f332bbcf75c1e3ef1d600ab0b8e3028d vendor.oneplus.fingerprint.extension@1.0::types
+27fdcc0600cf2bf3aea4c5c475eccd0073d3cfdc970b10ea4988eaa86632e04a vendor.oneplus.fingerprint.extension@1.0::IVendorFingerprintExtensions
+c63a6d2fb54ed89f5c5747390972a33a544778b0b64755d5b753edfc23d84836 vendor.oneplus.fingerprint.extension@1.0::IVendorFingerprintExtensionsCallback
+2f83de40c5bcacc966d631238205ca93a4350c79d304f5314b5e1408bdbb85ed vendor.oneplus.hardware.display@1.0::IOneplusDisplay
