@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "vendor.lineage.touch@1.0-service.oneplus"
+#define LOG_TAG "vendor.evervolv.touch@1.0-service.oneplus"
 
 #include <android-base/logging.h>
 #include <binder/ProcessState.h>
 #include <hidl/HidlTransportSupport.h>
 #include <touch/oneplus/TouchscreenGesture.h>
 
-using ::vendor::lineage::touch::V1_0::ITouchscreenGesture;
-using ::vendor::lineage::touch::V1_0::implementation::TouchscreenGesture;
+using ::vendor::evervolv::touch::V1_0::ITouchscreenGesture;
+using ::vendor::evervolv::touch::V1_0::implementation::TouchscreenGesture;
 
 int main() {
     android::sp<ITouchscreenGesture> gestureService = new TouchscreenGesture();

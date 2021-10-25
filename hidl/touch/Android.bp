@@ -14,12 +14,12 @@
 // limitations under the License.
 
 filegroup {
-    name: "vendor.lineage.touch@1.0-oneplus-touchgesture",
+    name: "vendor.evervolv.touch@1.0-oneplus-touchgesture",
     srcs: ["TouchscreenGesture.cpp"],
 }
 
 cc_library_headers {
-    name: "vendor.lineage.touch@1.0-oneplus-headers",
+    name: "vendor.evervolv.touch@1.0-oneplus-headers",
     vendor_available: true,
     export_include_dirs: ["include"],
 }
@@ -29,7 +29,7 @@ cc_defaults {
     defaults: ["hidl_defaults"],
     relative_install_path: "hw",
     srcs: [
-        ":vendor.lineage.touch@1.0-oneplus-touchgesture",
+        ":vendor.evervolv.touch@1.0-oneplus-touchgesture",
         "service.cpp",
     ],
     shared_libs: [
@@ -37,26 +37,26 @@ cc_defaults {
         "libbinder",
         "libhidlbase",
         "libutils",
-        "vendor.lineage.touch@1.0",
+        "vendor.evervolv.touch@1.0",
     ],
     local_include_dirs: ["include"],
     header_libs: [
-        "vendor.lineage.touch@1.0-oneplus-headers",
+        "vendor.evervolv.touch@1.0-oneplus-headers",
     ],
 }
 
 cc_binary {
-    name: "lineage.touch@1.0-service.oneplus",
+    name: "evervolv.touch@1.0-service.oneplus",
     defaults: ["oneplus_touch_hal_defaults"],
-    init_rc: ["lineage.touch@1.0-service.oneplus.rc"],
-    vintf_fragments: ["lineage.touch@1.0-service.oneplus.xml"],
+    init_rc: ["evervolv.touch@1.0-service.oneplus.rc"],
+    vintf_fragments: ["evervolv.touch@1.0-service.oneplus.xml"],
     system_ext_specific: true,
 }
 
 cc_binary {
-    name: "vendor.lineage.touch@1.0-service.oneplus",
+    name: "vendor.evervolv.touch@1.0-service.oneplus",
     defaults: ["oneplus_touch_hal_defaults"],
-    init_rc: ["vendor.lineage.touch@1.0-service.oneplus.rc"],
-    vintf_fragments: ["vendor.lineage.touch@1.0-service.oneplus.xml"],
+    init_rc: ["vendor.evervolv.touch@1.0-service.oneplus.rc"],
+    vintf_fragments: ["vendor.evervolv.touch@1.0-service.oneplus.xml"],
     vendor: true,
 }
